@@ -50,7 +50,7 @@ git clone https://github.com/sinaghadermarzi/facial-feedback.git
 cd facial-feedback
 ```
 
-Then you can follow one of these steps (using venv or conda)
+Then you can follow one of these methods (using venv or conda)
 
 ### Using venv
 
