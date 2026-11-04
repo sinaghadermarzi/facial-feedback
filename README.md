@@ -36,6 +36,23 @@ Possible practical applications includes:
 2. The second step is to be able to detect basic emotions that there are already technologies available for them (like smile detection) 
 3. Further extensions and improvement of existing models and tools. 
 
+## What is in the repo
+
+The current code is a small Flask app that runs [py-feat](https://py-feat.org/) on an uploaded image:
+
+- `app.py` – Flask app. `GET /` serves an upload form; `POST /predict` saves the uploaded file to
+  `tmp/<timestamp><2 digits>.jpg` and returns the detection result as JSON.
+- `src/predict_image.py` – builds a py-feat `Detector` (face: `retinaface`, landmarks: `mobilefacenet`,
+  action units: `svm`, emotion: `resmasknet`, pose: `img2pose`) at import time and returns the first detected
+  face's columns (face box, landmarks, action units, emotion scores, head pose) as a dict of strings.
+- `templates/home_template.html` – the upload form.
+- `notebooks/getting_started_py-feat.ipynb` – first experiments with py-feat on its bundled test image. Note
+  that its first cell clones `cosanlab/feat` into the working directory to import its test helpers.
+- `requirements.txt` / `environment.yml` – pinned dependencies (Python 3.10, py-feat 0.4.0, torch 1.12.1,
+  Flask 2.2.2, JupyterLab).
+
+No dataset is included: `.gitignore` reserves `data/raw/` and `data/processed/` for local data.
+
 ## Usage
 
 1. First, clone the repository using the command below: 
@@ -86,7 +103,16 @@ WARNING: This is a development server. Do not use it in a production deployment.
 Press CTRL+C to quit
 ```
 
-7. Enter the address (`http://127.0.0.1:5000`) in your browser 
+7. Enter the address (`http://127.0.0.1:5000`) in your browser, choose an image and click **Run Prediction**.
+   The response is the JSON dict described above.
+
+Notes:
+
+- The first request (or the first import of `src/predict_image.py`) downloads the py-feat model weights, so it
+  takes a while and needs network access.
+- Uploaded images are kept in `tmp/` (the `os.remove` in `app.py` is commented out).
+- To try py-feat outside the app, open the notebook with `jupyter lab notebooks/getting_started_py-feat.ipynb`
+  (JupyterLab is in the requirements).
 
 
 
